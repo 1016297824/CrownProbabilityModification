@@ -111,8 +111,7 @@ namespace CrownProbabilityModification
 
         /// <summary>
         /// 为Four 个常驻刷新点添加1254号物品（概率）
-        /// 位置A：(389.75, 0.00, 657.61) 和 (388.74, 0.00, 656.71)
-        /// 位置B：(528.59, 0.00, 326.56) 和 (528.59, 0.00, 326.72)
+        /// 两个位置随机(387.60, 0.50, 657.20),(528.90, 0.50, 327.20)
         /// </summary>
         private void OnFarmLevelLoaded()
         {
@@ -139,10 +138,8 @@ namespace CrownProbabilityModification
         {
             Vector3[] targetPositions = new Vector3[]
             {
-                new Vector3(389.75f, 0.50f, 657.61f),
-                new Vector3(388.74f, 0.50f, 656.71f),
-                new Vector3(528.59f, 0.50f, 326.56f),
-                new Vector3(528.59f, 0.50f, 326.72f)
+                new Vector3(387.60f, 0.50f, 657.20f),
+                new Vector3(528.90f, 0.50f, 327.20f)
             };
         
             // 随机选择一个位置
@@ -155,11 +152,12 @@ namespace CrownProbabilityModification
                     
             if (crownItem != null)
             {
+                // 放置物品
                 crownItem.transform.position = selectedPos;
-                crownItem.transform.rotation = UnityEngine.Quaternion.identity;
-                        
-                // 使用Drop方法显示物品在地面
-                var dropResult = crownItem.Drop(selectedPos, false, UnityEngine.Vector3.up, 0f);
+                crownItem.Drop(selectedPos, false, UnityEngine.Vector3.up, 360f);
+                
+                // 标记为地面物品（设置物品来源）
+                crownItem.FromInfoKey = "Ground";
             }
         }
 
