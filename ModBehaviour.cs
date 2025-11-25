@@ -18,7 +18,7 @@ namespace CrownProbabilityModification
         private static bool sceneLevelLoaded = false;
         
         // 场景加载事件处理器，用于后续注销
-        private UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode> sceneLoadedHandler;
+        private UnityEngine.Events.UnityAction<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>? sceneLoadedHandler;
         
         /// <summary>
         /// 当组件启用时调用
@@ -89,6 +89,12 @@ namespace CrownProbabilityModification
         /// </summary>
         private void Update()
         {
+            // 检查是否启用皇冠爆率功能
+            if (!CrownConfig.EnableCrownDropRate)
+            {
+                return;
+            }
+
             // 检测是否进入了农场镇（只检测一次）
             if (!sceneLevelLoaded)
             {
@@ -110,19 +116,20 @@ namespace CrownProbabilityModification
         /// </summary>
         private void OnFarmLevelLoaded()
         {
-            // 检查是否启用皇冠爆率功能
-            if (!CrownConfig.EnableCrownDropRate)
-            {
-                return;
-            }
-        
             // 获取爆率
             float crownDropRate = CrownConfig.CrownDropRate;
         
+            // 当爆率为100%时，确保必定触发
+            if (crownDropRate >= 100f)
+            {
+                GenerateRandomCrown();
+                return;
+            }
+
             // 计算随机概率（0-100%）
             float randomChance = UnityEngine.Random.Range(0f, 100f);
                     
-            if (randomChance <= crownDropRate)
+            if (randomChance < crownDropRate)
             {
                 GenerateRandomCrown();
             }
@@ -132,10 +139,10 @@ namespace CrownProbabilityModification
         {
             Vector3[] targetPositions = new Vector3[]
             {
-                new Vector3(389.75f, 0.00f, 657.61f),
-                new Vector3(388.74f, 0.00f, 656.71f),
-                new Vector3(528.59f, 0.00f, 326.56f),
-                new Vector3(528.59f, 0.00f, 326.72f)
+                new Vector3(389.75f, 0.50f, 657.61f),
+                new Vector3(388.74f, 0.50f, 656.71f),
+                new Vector3(528.59f, 0.50f, 326.56f),
+                new Vector3(528.59f, 0.50f, 326.72f)
             };
         
             // 随机选择一个位置
